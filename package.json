@@ -1,0 +1,10 @@
+{
+  "name": "appointment-evaluation-app",
+  "version": "1.0.0",
+  "description": "임용 지원서(PDF) 정리·채점·취합 웹앱 (Netlify + Gemini)",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  }
+}

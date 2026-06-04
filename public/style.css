@@ -1,0 +1,196 @@
+:root {
+  --bg: #f4f6f9;
+  --card: #ffffff;
+  --border: #e2e6ec;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --danger: #dc2626;
+  --ok: #16a34a;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.topbar {
+  background: #1e293b;
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+.topbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.topbar h1 { font-size: 18px; margin: 0; }
+.session-info { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 24px 20px 60px; }
+
+.view { animation: fade 0.2s ease; }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
+}
+.card h3 { margin-top: 0; }
+
+.hidden { display: none !important; }
+.muted { color: var(--muted); font-size: 14px; }
+
+/* 버튼 */
+.btn {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.15s, opacity 0.15s;
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--primary-dark); }
+.btn-ghost { background: #eef2f7; color: var(--text); }
+.btn-ghost:hover:not(:disabled) { background: #e2e8f0; }
+.btn-danger { background: #fee2e2; color: var(--danger); }
+.btn-sm { padding: 6px 10px; font-size: 13px; }
+
+/* 입력 */
+label { display: block; margin-bottom: 14px; font-size: 14px; font-weight: 600; }
+input, select, textarea {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 400;
+}
+textarea { resize: vertical; }
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* 로그인 */
+.login-card { max-width: 420px; margin: 40px auto; }
+.role-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+.role-tab {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--border);
+  background: #f8fafc;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--muted);
+}
+.role-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.notice {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+.notice .btn { margin-top: 8px; }
+.error { color: var(--danger); font-size: 14px; }
+
+/* 관리자 탭 */
+.admin-tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+.admin-tab {
+  padding: 10px 18px;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.admin-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+.mini-table, .data-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+.mini-table th, .mini-table td,
+.data-table th, .data-table td {
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  text-align: left;
+  font-size: 14px;
+  vertical-align: top;
+}
+.mini-table th, .data-table th { background: #f8fafc; font-size: 13px; }
+.mini-table input { margin: 0; }
+.data-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.data-table td.center { text-align: center; }
+
+.actions-bar { display: flex; align-items: center; gap: 14px; }
+.inline-msg { font-size: 14px; }
+.inline-msg.ok { color: var(--ok); }
+.inline-msg.err { color: var(--danger); }
+
+.upload-progress { margin-top: 14px; font-size: 14px; }
+.upload-progress .row { padding: 6px 0; border-bottom: 1px solid var(--border); }
+.upload-progress .ok { color: var(--ok); }
+.upload-progress .err { color: var(--danger); }
+.upload-progress .pending { color: var(--muted); }
+
+/* 심사위원 화면 */
+.eval-progress { margin-bottom: 12px; font-weight: 600; }
+.split { display: grid; grid-template-columns: 320px 1fr; gap: 18px; align-items: start; }
+.applicant-list { list-style: none; padding: 0; margin: 0; max-height: 70vh; overflow: auto; }
+.applicant-list li {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+.applicant-list li:hover { background: #f8fafc; }
+.applicant-list li.active { border-color: var(--primary); background: #eff6ff; }
+.applicant-list li .ap-num { font-size: 12px; color: var(--muted); }
+.applicant-list li .ap-name { font-weight: 600; }
+.applicant-list li .ap-done { color: var(--ok); font-size: 12px; font-weight: 600; }
+
+.detail-pane h2 { margin-top: 0; }
+.field-grid { display: grid; grid-template-columns: 140px 1fr; gap: 6px 12px; margin: 12px 0; font-size: 14px; }
+.field-grid .label { color: var(--muted); font-weight: 600; }
+.summary-box { background: #f8fafc; border-radius: 8px; padding: 14px; white-space: pre-wrap; font-size: 14px; }
+
+.score-form { margin-top: 18px; border-top: 1px solid var(--border); padding-top: 18px; }
+.score-row { display: grid; grid-template-columns: 1fr 120px; gap: 10px; align-items: center; margin-bottom: 10px; }
+.score-row .s-name { font-weight: 600; }
+.score-row .s-max { color: var(--muted); font-size: 13px; }
+.score-total { font-size: 18px; font-weight: 700; margin: 10px 0; }
+
+@media (max-width: 800px) {
+  .split { grid-template-columns: 1fr; }
+  .applicant-list { max-height: none; }
+}
+
+.table-scroll { overflow-x: auto; }
+.results-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.toolbar-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.sort-label { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 14px; }
+.sort-label select { width: auto; margin: 0; }
+.rank-badge { display: inline-block; min-width: 22px; text-align: center; font-weight: 700; }
