@@ -309,8 +309,9 @@ async function saveSetup() {
 // ===== PDF 업로드 =====
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// 무료 API 할당량(예: 5 RPM) 초과를 막기 위한 파일 간 지연 시간(ms)
-const UPLOAD_DELAY_MS = 12000;
+// 무료 API 할당량(예: 5 RPM = 12초당 1회) 초과를 막기 위한 파일 간 지연 시간(ms)
+// 타이밍 오차로 한도에 걸리지 않도록 여유를 둬 15초(분당 약 4회)로 설정
+const UPLOAD_DELAY_MS = 15000;
 
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
