@@ -209,6 +209,7 @@ function bindAdmin() {
   $('saveSetupBtn').addEventListener('click', saveSetup);
   $('uploadBtn').addEventListener('click', uploadPdfs);
   $('refreshApplicantsBtn').addEventListener('click', loadApplicantsAdmin);
+  $('fillFromFilenameBtn').addEventListener('click', fillNumbersFromFilename);
   $('refreshResultsBtn').addEventListener('click', loadResults);
   $('resultSort').addEventListener('change', renderResults);
   $('exportCsvBtn').addEventListener('click', exportCsv);
@@ -409,6 +410,29 @@ async function uploadPdfs() {
   $('uploadBtn').disabled = false;
   input.value = '';
   loadApplicantsAdmin();
+}
+
+// 이미 등록된 지원자 중 접수번호가 비어 있는 경우, 저장된 파일명의 10자리 숫자로 채운다.
+async function fillNumbersFromFilename() {
+  const msg = $('fillMsg');
+  msg.className = 'inline-msg';
+  msg.textContent = '처리 중...';
+  const tenDigit = (s) => { const m = String(s || '').match(/\d{10}/); return m ? m[0] : ''; };
+  let filled = 0;
+  for (const a of applicantsCache) {
+    if (String(a.appNumber || '').trim()) continue; // 이미 있으면 건너뜀
+    const num = tenDigit(a.fileName);
+    if (!num) continue;
+    try {
+      await api('/api/applicants', { method: 'PATCH', body: { id: a.id, appNumber: num } });
+      filled += 1;
+    } catch { /* 무시하고 계속 */ }
+  }
+  msg.className = filled ? 'inline-msg ok' : 'inline-msg';
+  msg.textContent = filled
+    ? `${filled}건의 접수번호를 파일명에서 채웠습니다.`
+    : '파일명에서 채울 수 있는 접수번호가 없습니다. (새로 업로드한 파일은 표 안의 번호도 자동 인식됩니다)';
+  await loadApplicantsAdmin();
 }
 
 async function loadApplicantsAdmin() {

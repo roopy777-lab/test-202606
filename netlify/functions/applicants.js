@@ -56,10 +56,21 @@ export default async (req) => {
       return json({ error: 'GEMINI_ERROR', message: String(e.message || e) }, 502);
     }
 
+    // 접수번호 자동 결정: ①관리자가 직접 지정한 값 → ②파일명의 10자리 숫자
+    //                     → ③지원서 첫 페이지 표에서 추출한 10자리 숫자
+    const tenDigit = (s) => {
+      const m = String(s || '').match(/\d{10}/);
+      return m ? m[0] : '';
+    };
+    const autoNumber =
+      String(appNumber || '').trim() ||
+      tenDigit(fileName) ||
+      tenDigit(extracted.applicationNumber);
+
     const id = newId('a');
     const rec = {
       id,
-      appNumber: String(appNumber || '').trim() || '',
+      appNumber: autoNumber,
       displayName: extracted.applicantName || fileName || '(이름 미상)',
       fileName: fileName || '',
       summary: extracted.summary || '',

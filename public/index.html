@@ -144,6 +144,7 @@
             <h3>PDF 지원서 등록</h3>
             <p class="muted">
               PDF 파일을 선택하면 Gemini가 내용을 읽어 자동으로 요약·정리합니다.
+              <strong>접수번호</strong>는 파일명의 10자리 숫자 또는 지원서 첫 페이지 표의 접수번호에서 자동 인식되며, 필요 시 직접 수정할 수 있습니다.
               파일당 약 4MB 이하를 권장합니다.
               무료 API 할당량(분당 요청 수) 보호를 위해 <strong>여러 파일은 약 15초 간격으로</strong> 순차 처리되며,
               그동안 창을 닫지 마세요.
@@ -156,6 +157,8 @@
           <div class="card">
             <h3>등록된 지원자 (<span id="applicantCount">0</span>명)</h3>
             <button id="refreshApplicantsBtn" class="btn btn-ghost btn-sm">새로고침</button>
+            <button id="fillFromFilenameBtn" class="btn btn-ghost btn-sm">파일명에서 접수번호 채우기</button>
+            <span id="fillMsg" class="inline-msg"></span>
             <table class="data-table">
               <thead>
                 <tr><th style="width:120px">접수번호</th><th>이름</th><th>요약</th><th style="width:70px"></th></tr>

@@ -8,6 +8,10 @@ const RESPONSE_SCHEMA = {
   type: 'object',
   properties: {
     applicantName: { type: 'string', description: '지원자 이름' },
+    applicationNumber: {
+      type: 'string',
+      description: '첫 페이지 표 최상단 왼쪽 칸의 10자리 접수번호(숫자만). 없으면 빈 문자열',
+    },
     summary: { type: 'string', description: '학력/경력/연구실적/강점 요약' },
     fields: {
       type: 'array',
@@ -21,13 +25,15 @@ const RESPONSE_SCHEMA = {
       },
     },
   },
-  required: ['applicantName', 'summary', 'fields'],
+  required: ['applicantName', 'applicationNumber', 'summary', 'fields'],
 };
 
 const PROMPT = `당신은 대학 교원 임용 지원서를 분석하는 행정 보조자입니다.
 첨부된 PDF 지원서를 읽고 심사위원이 빠르게 파악할 수 있도록 핵심 정보를 한국어로 정리하세요.
 
 - applicantName: 지원자 본인의 이름 (확인 불가 시 빈 문자열)
+- applicationNumber: 지원서 첫 페이지 표의 최상단 왼쪽 칸에 적힌 10자리 접수번호.
+  숫자만 추출하세요(하이픈·공백 제거). 확실하지 않거나 10자리 숫자가 없으면 빈 문자열로 두세요.
 - summary: 지원자의 최종학력, 전공, 주요 경력, 연구실적, 강점을 5~8문장으로 요약
 - fields: PDF에서 확인되는 항목을 라벨/값 쌍으로 정리
   (예: 생년월일, 최종학력, 전공, 주요경력, 연구실적(논문) 건수, 자격증, 지원분야 등)
@@ -90,6 +96,7 @@ export async function processPdf(fileBase64) {
   }
   return {
     applicantName: String(parsed.applicantName || '').trim(),
+    applicationNumber: String(parsed.applicationNumber || '').trim(),
     summary: String(parsed.summary || '').trim(),
     fields: Array.isArray(parsed.fields)
       ? parsed.fields
