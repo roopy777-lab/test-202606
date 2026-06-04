@@ -24,12 +24,14 @@ function clearSession() {
 
 // ===== API 헬퍼 =====
 function authHeaders() {
+  // 헤더 값은 ISO-8859-1만 허용되므로, 한글 등이 포함될 수 있는 코드는
+  // encodeURIComponent로 인코딩해서 보낸다. (서버에서 decodeURIComponent)
   const h = {};
   if (!session) return h;
-  if (session.role === 'admin') h['x-admin-code'] = session.adminCode;
+  if (session.role === 'admin') h['x-admin-code'] = encodeURIComponent(session.adminCode || '');
   if (session.role === 'evaluator') {
-    h['x-evaluator-id'] = session.id;
-    h['x-evaluator-code'] = session.code;
+    h['x-evaluator-id'] = encodeURIComponent(session.id || '');
+    h['x-evaluator-code'] = encodeURIComponent(session.code || '');
   }
   return h;
 }

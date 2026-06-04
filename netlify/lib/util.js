@@ -36,6 +36,18 @@ export const randCode = (len = 6) =>
 export const newId = (prefix) =>
   prefix + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 
+// ---- 헤더 값 디코딩 ----
+// 클라이언트가 encodeURIComponent로 인코딩해 보낸 인증값을 복원한다.
+// 인코딩되지 않은 평문(ASCII)도 그대로 동작한다.
+export function decodeHeader(v) {
+  if (v == null) return '';
+  try {
+    return decodeURIComponent(v);
+  } catch {
+    return String(v);
+  }
+}
+
 // ---- 타이밍 안전 비교 ----
 export function safeEqual(a, b) {
   a = String(a == null ? '' : a);
@@ -50,7 +62,7 @@ export function safeEqual(a, b) {
 export async function requireAdmin(req) {
   const settings = await getSettings();
   if (!settings.setupComplete) return { ok: false, settings, error: 'NOT_SETUP' };
-  const code = req.headers.get('x-admin-code');
+  const code = decodeHeader(req.headers.get('x-admin-code'));
   if (!code || !safeEqual(code, settings.adminCode))
     return { ok: false, settings, error: 'UNAUTHORIZED' };
   return { ok: true, settings };
@@ -58,8 +70,8 @@ export async function requireAdmin(req) {
 
 export async function requireEvaluator(req) {
   const settings = await getSettings();
-  const id = req.headers.get('x-evaluator-id');
-  const code = req.headers.get('x-evaluator-code');
+  const id = decodeHeader(req.headers.get('x-evaluator-id'));
+  const code = decodeHeader(req.headers.get('x-evaluator-code'));
   const ev = (settings.evaluators || []).find((e) => e.id === id);
   if (!ev || !safeEqual(code, ev.code))
     return { ok: false, settings, error: 'UNAUTHORIZED' };

@@ -1,4 +1,4 @@
-import { getSettings, saveSettings, json, safeEqual, newId, randCode } from '../lib/util.js';
+import { getSettings, saveSettings, json, safeEqual, newId, randCode, decodeHeader } from '../lib/util.js';
 
 export const config = { path: '/api/setup' };
 
@@ -10,7 +10,7 @@ export default async (req) => {
     // 관리자에게 코드 포함 전체 설정 반환
     const current = await getSettings();
     if (current.setupComplete) {
-      if (!safeEqual(req.headers.get('x-admin-code'), current.adminCode))
+      if (!safeEqual(decodeHeader(req.headers.get('x-admin-code')), current.adminCode))
         return json({ ok: false, error: 'UNAUTHORIZED' }, 401);
     }
     return json({ ok: true, settings: current });
@@ -22,7 +22,7 @@ export default async (req) => {
   const current = await getSettings();
 
   if (current.setupComplete) {
-    if (!safeEqual(req.headers.get('x-admin-code'), current.adminCode))
+    if (!safeEqual(decodeHeader(req.headers.get('x-admin-code')), current.adminCode))
       return json({ ok: false, error: 'UNAUTHORIZED' }, 401);
   }
 
