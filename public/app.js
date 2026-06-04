@@ -307,6 +307,11 @@ async function saveSetup() {
 }
 
 // ===== PDF 업로드 =====
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// 무료 API 할당량(예: 5 RPM) 초과를 막기 위한 파일 간 지연 시간(ms)
+const UPLOAD_DELAY_MS = 12000;
+
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -324,7 +329,8 @@ async function uploadPdfs() {
 
   $('uploadBtn').disabled = true;
   box.innerHTML = '';
-  for (const file of files) {
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
     const row = document.createElement('div');
     row.className = 'row pending';
     row.textContent = `⏳ ${file.name} — 처리 중...`;
@@ -333,10 +339,13 @@ async function uploadPdfs() {
     if (file.size > 5 * 1024 * 1024) {
       row.className = 'row err';
       row.textContent = `⚠️ ${file.name} — 파일이 너무 큽니다(5MB 초과). 압축 후 다시 시도하세요.`;
-      continue;
+      continue; // API를 호출하지 않았으므로 지연 없이 다음 파일로
     }
+
+    let called = false;
     try {
       const b64 = await fileToBase64(file);
+      called = true; // 이 시점부터 API 할당량을 소모
       const r = await api('/api/applicants', { method: 'POST', body: {
         fileName: file.name, fileBase64: b64,
       }});
@@ -345,6 +354,20 @@ async function uploadPdfs() {
     } catch (err) {
       row.className = 'row err';
       row.textContent = `❌ ${file.name} — 실패: ${err.message || '오류'}`;
+    }
+
+    // API를 호출한 경우, 남은 파일이 있으면 할당량 보호를 위해 대기(카운트다운 표시)
+    if (called && i < files.length - 1) {
+      const wait = document.createElement('div');
+      wait.className = 'row pending';
+      box.appendChild(wait);
+      let remain = Math.round(UPLOAD_DELAY_MS / 1000);
+      while (remain > 0) {
+        wait.textContent = `⏸ API 할당량 보호를 위해 대기 중... (${remain}초 후 다음 파일 처리)`;
+        await sleep(1000);
+        remain -= 1;
+      }
+      wait.remove();
     }
   }
   $('uploadBtn').disabled = false;
