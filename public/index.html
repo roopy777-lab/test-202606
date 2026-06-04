@@ -51,6 +51,27 @@
             <button class="btn btn-primary" type="submit">관리자 입장</button>
           </form>
 
+          <!-- 관리자 코드 복구 (ADMIN_RESET_CODE 환경변수 필요) -->
+          <div id="adminRecover" class="hidden">
+            <p class="recover-link">
+              <a href="#" id="showRecoverBtn">관리자 코드를 잊으셨나요? 재설정</a>
+            </p>
+            <form id="recoverForm" class="login-form hidden">
+              <p class="muted">
+                Netlify 환경변수 <code>ADMIN_RESET_CODE</code> 값과 새로 사용할
+                관리자 코드를 입력하세요. 등록된 지원자·점수·심사위원 설정은 유지됩니다.
+              </p>
+              <label>재설정 코드 (ADMIN_RESET_CODE)
+                <input id="resetCodeInput" type="password" autocomplete="off" required />
+              </label>
+              <label>새 관리자 코드
+                <input id="newAdminCodeInput" type="text" autocomplete="off" required />
+              </label>
+              <button class="btn btn-primary" type="submit">관리자 코드 재설정</button>
+            </form>
+            <p id="recoverMsg" class="inline-msg"></p>
+          </div>
+
           <p id="loginError" class="error hidden"></p>
         </div>
       </section>

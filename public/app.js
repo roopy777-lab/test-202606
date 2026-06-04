@@ -114,8 +114,43 @@ function bindLogin() {
       const role = tab.dataset.role;
       $('evaluatorLoginForm').classList.toggle('hidden', role !== 'evaluator');
       $('adminLoginForm').classList.toggle('hidden', role !== 'admin');
+      $('adminRecover').classList.toggle('hidden', role !== 'admin');
       hideLoginError();
     });
+  });
+
+  // 관리자 코드 복구
+  $('showRecoverBtn').addEventListener('click', (e) => {
+    e.preventDefault();
+    $('recoverForm').classList.toggle('hidden');
+  });
+
+  $('recoverForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = $('recoverMsg');
+    msg.className = 'inline-msg';
+    msg.textContent = '처리 중...';
+    const resetCode = $('resetCodeInput').value.trim();
+    const newAdminCode = $('newAdminCodeInput').value.trim();
+    if (!newAdminCode) { msg.className = 'inline-msg err'; msg.textContent = '새 관리자 코드를 입력하세요.'; return; }
+    try {
+      await api('/api/recover', { auth: false, method: 'POST', body: { resetCode, newAdminCode } });
+      msg.className = 'inline-msg ok';
+      msg.textContent = '재설정되었습니다. 새 코드로 관리자 입장하세요.';
+      $('adminCodeInput').value = newAdminCode;
+      $('recoverForm').classList.add('hidden');
+      $('resetCodeInput').value = '';
+      $('newAdminCodeInput').value = '';
+      await loadPublicConfig();
+    } catch (err) {
+      msg.className = 'inline-msg err';
+      const code = err.data && err.data.error;
+      if (code === 'RESET_NOT_CONFIGURED')
+        msg.textContent = 'Netlify 환경변수 ADMIN_RESET_CODE가 설정되어 있지 않습니다.';
+      else if (code === 'INVALID_RESET_CODE')
+        msg.textContent = '재설정 코드가 올바르지 않습니다.';
+      else msg.textContent = '재설정 실패: ' + (err.message || '오류');
+    }
   });
 
   $('evaluatorLoginForm').addEventListener('submit', async (e) => {

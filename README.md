@@ -38,8 +38,11 @@ PDF 형식의 임용 지원서를 업로드하면 **Gemini(gemini-3-flash-previe
    | Key | Value |
    |-----|-------|
    | `GEMINI_API_KEY` | (발급받은 Gemini API Key) |
+   | `ADMIN_RESET_CODE` | (선택) 관리자 코드 분실 시 복구용 비밀 코드 |
 
    > (선택) 모델을 바꾸려면 `GEMINI_MODEL` 변수에 모델명을 넣으면 됩니다. 기본값: `gemini-3-flash-preview`
+   > `ADMIN_RESET_CODE`를 설정해 두면, 관리자 코드를 잊었을 때 로그인 화면의
+   > "관리자 코드를 잊으셨나요? 재설정"에서 이 값으로 새 관리자 코드를 지정할 수 있습니다(데이터 유지).
 
 4. 환경변수를 추가한 뒤 **Deploys → Trigger deploy → Deploy site** 로 재배포합니다.
 5. **Blobs는 별도 설정이 필요 없습니다.** (Netlify가 자동 제공)

@@ -117,6 +117,9 @@ input:focus, select:focus, textarea:focus {
 }
 .notice .btn { margin-top: 8px; }
 .error { color: var(--danger); font-size: 14px; }
+.recover-link { margin: 14px 0 6px; font-size: 13px; text-align: right; }
+.recover-link a { color: var(--muted); text-decoration: underline; }
+code { background: #eef2f7; padding: 1px 5px; border-radius: 4px; font-size: 13px; }
 
 /* 관리자 탭 */
 .admin-tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
