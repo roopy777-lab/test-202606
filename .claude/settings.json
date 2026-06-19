@@ -1,0 +1,33 @@
+{
+  "plugins": {
+    "ponytail": {
+      "source": "DietrichGebert/ponytail",
+      "version": "4.7.0",
+      "skills": ["ponytail"]
+    }
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v node >/dev/null 2>&1 && node \"$(git rev-parse --show-toplevel)/.claude/plugins/ponytail/hooks/ponytail-activate.js\" || exit 0",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v node >/dev/null 2>&1 && node \"$(git rev-parse --show-toplevel)/.claude/plugins/ponytail/hooks/ponytail-mode-tracker.js\" || exit 0",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
